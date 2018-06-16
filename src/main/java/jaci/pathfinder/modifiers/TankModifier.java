@@ -1,5 +1,6 @@
 package jaci.pathfinder.modifiers;
 
+import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.PathfinderJNI;
 import jaci.pathfinder.Trajectory;
 
@@ -13,7 +14,8 @@ import jaci.pathfinder.Trajectory;
  *
  * @author Jaci
  */
-public class TankModifier {
+public class TankModifier 
+{
 
     Trajectory source, left, right;
 
@@ -21,7 +23,8 @@ public class TankModifier {
      * Create an instance of the modifier
      * @param source The source (center) trajectory
      */
-    public TankModifier(Trajectory source) {
+    public TankModifier(Trajectory source) 
+    {
         this.source = source;
     }
 
@@ -30,32 +33,44 @@ public class TankModifier {
      * @param wheelbase_width   The width (in meters) between the individual sides of the drivebase
      * @return                  self
      */
-    public TankModifier modify(double wheelbase_width) {
+    public TankModifier modify(double wheelbase_width) 
+    {
         Trajectory[] trajs = PathfinderJNI.modifyTrajectoryTank(source, wheelbase_width);
+        
         left = trajs[0];
+        left.setName("left");
+        
         right = trajs[1];
+        right.setName("right");
+        
         return this;
     }
 
     /**
      * Get the initial source trajectory
      */
-    public Trajectory getSourceTrajectory() {
+    public Trajectory getSourceTrajectory() 
+    {
         return source;
     }
 
     /**
      * Get the trajectory for the left side of the drive base
      */
-    public Trajectory getLeftTrajectory() {
-        return left;
+    public Trajectory getLeftTrajectory() 
+    {
+    	if (Pathfinder.isTracing()) left.dumpToLog();
+
+    	return left;
     }
 
     /**
      * Get the trajectory for the right side of the drive base
      */
-    public Trajectory getRightTrajectory() {
+    public Trajectory getRightTrajectory() 
+    {
+    	if (Pathfinder.isTracing()) right.dumpToLog();
+
         return right;
     }
-
 }

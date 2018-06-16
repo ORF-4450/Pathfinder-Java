@@ -2,6 +2,7 @@ package jaci.pathfinder.followers;
 
 import Team4450.Lib.Util;
 
+import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
 /**
@@ -96,14 +97,17 @@ public class EncoderFollower
         if (segment < trajectory.length()) 
         {
             Trajectory.Segment seg = trajectory.get(segment);
+            
             double error = seg.position - distance_covered;
+            
             double calculated_value =
                     kp * error +                                    // Proportional
                     kd * ((error - last_error) / seg.dt) +          // Derivative
                     (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
             
-            Util.consoleLog("%s: seg=%d dc=%.2f tdc=%.2f err=%.2f cv=%.2f", name, segment, distance_covered, seg.position, 
-            				error, calculated_value);
+            if (Pathfinder.isTracing())
+            	Util.consoleLog("%s: seg=%d dc=%.2f tdc=%.2f err=%.2f cv=%.2f", name, segment, distance_covered, 
+            			seg.position, error, calculated_value);
 
             last_error = error;
             heading = seg.heading;

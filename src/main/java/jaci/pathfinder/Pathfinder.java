@@ -2,6 +2,8 @@ package jaci.pathfinder;
 
 import java.io.File;
 
+import Team4450.Lib.Util;
+
 /**
  * The main class of the Pathfinder Library. The Pathfinder Library is used for Motion Profile and Trajectory Generation.
  *
@@ -11,8 +13,26 @@ import java.io.File;
  */
 public class Pathfinder 
 {
-
+	private static boolean	trace;
+	
     /**
+	 * @return the trace setting, true if tracing.
+	 */
+	public static boolean isTracing()
+	{
+		return trace;
+	}
+
+	/**
+	 * Set the trace flag on or off.
+	 * @param trace True to trace, false to stop.
+	 */
+	public static void setTrace( boolean trace )
+	{
+		Pathfinder.trace = trace;
+	}
+
+	/**
      * Convert degrees to radians. This is included here for static imports. In this library, all angle values are
      * given in radians
      */
@@ -48,7 +68,17 @@ public class Pathfinder
      */
     public static Trajectory generate(Waypoint[] waypoints, Trajectory.Config config) 
     {
-        return PathfinderJNI.generateTrajectory(waypoints, config);
+    	Trajectory	trajectory;
+    	
+    	if (isTracing()) Util.consoleLog("generating trajectory...");
+    	
+    	trajectory = PathfinderJNI.generateTrajectory(waypoints, config);
+    	
+    	trajectory.setName("center");
+    	
+    	if (isTracing()) Util.consoleLog("completed...length=%d", trajectory.length());
+    	
+        return trajectory;
     }
 
     /**
