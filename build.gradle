@@ -2,7 +2,7 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "jaci.openrio.gradle.GradleRIO" //version "2018.03.06"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
 }
 
 def TEAM = 4450
@@ -36,9 +36,10 @@ jar {
     //manifest jaci.openrio.gradle.GradleRIOPlugin.javaManifest(ROBOT_CLASS)
 }
 
-task copy(type: Copy) {
-    from file("build/libs/Pathfinder-Java-1.8.jar")
-    into file("C:/Users/rcorn/wpilib/user/RobotLib/Pathfinder-Java-1.8.jar")
+task buildToRobotLib(type: Copy, dependsOn: jar) {
+    mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
+    from 'build\\libs\\Pathfinder-Java.jar'
+    into System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
 }
 
 task wrapper(type: Wrapper) {
