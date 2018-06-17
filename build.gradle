@@ -2,11 +2,13 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
+    id "jaci.openrio.gradle.GradleRIO" //version "2018.03.06"
 }
 
-def TEAM = 4450
-def ROBOT_CLASS = "Team4450.Robot"
+build.finalizedBy 'buildToRobotLib'
+
+//def TEAM = 4450
+//def ROBOT_CLASS = "Team4450.Robot"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
@@ -38,7 +40,7 @@ jar {
 
 task buildToRobotLib(type: Copy, dependsOn: jar) {
     mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
-    from 'build\\libs\\Pathfinder-Java.jar'
+    from 'build\\libs'
     into System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
 }
 
