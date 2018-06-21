@@ -106,8 +106,8 @@ public class EncoderFollower
                     (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
             
             if (Pathfinder.isTracing())
-            	Util.consoleLog("%s: seg=%d dc=%.2f tdc=%.2f err=%.2f cv=%.2f", name, segment, distance_covered, 
-            			seg.position, error, calculated_value);
+            	Util.consoleLog("%s: seg=%d dc=%.2f tdc=%.2f err=%.2f cv=%.2f hdg=%.2f", name, segment, distance_covered, 
+            			seg.position, error, calculated_value, Pathfinder.d2r(seg.heading));
 
             last_error = error;
             heading = seg.heading;

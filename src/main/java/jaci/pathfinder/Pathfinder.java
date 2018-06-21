@@ -60,7 +60,7 @@ public class Pathfinder
     }
 
     /**
-     * Generate a motion profile trajectory using the given waypoints and configuration.
+     * Generate a motion profile trajectory using the given waypoints and configuration. 
      * @param waypoints     An array of waypoints (setpoints) for the trajectory path to intersect
      * @param config        The configuration of the trajectory, including max velocity, acceleration, jerk
      *                      and other values such as time scale and fit method
@@ -70,17 +70,37 @@ public class Pathfinder
     {
     	Trajectory	trajectory;
     	
-    	if (isTracing()) Util.consoleLog("generating trajectory...");
+    	Util.consoleLog("generating trajectory...");
     	
     	trajectory = PathfinderJNI.generateTrajectory(waypoints, config);
     	
     	trajectory.setName("center");
     	
-    	if (isTracing()) Util.consoleLog("completed...length=%d", trajectory.length());
+    	Util.consoleLog("completed...length=%d", trajectory.length());
     	
         return trajectory;
     }
+    
+    /**
+     * Generate a motion profile trajectory using the given waypoints and configuration. Saves the
+     * new trajectory to the supplied file path.
+     * @param waypoints     An array of waypoints (setpoints) for the trajectory path to intersect
+     * @param config        The configuration of the trajectory, including max velocity, acceleration, jerk
+     *                      and other values such as time scale and fit method
+     * @param saveFile		The file path to save the trajectory in.
+     * @return              The generated trajectory (an array of segments)
+     */
+    public static Trajectory generate(Waypoint[] waypoints, Trajectory.Config config, File file) 
+    {
+    	Trajectory	trajectory;
+    	
+    	trajectory = generate(waypoints, config);
+    	
+    	writeToCSV(file, trajectory);
 
+    	return trajectory;
+    }
+    
     /**
      * Write the Trajectory to a Binary (non human readable) file
      * @param file          The file to write to
@@ -88,6 +108,8 @@ public class Pathfinder
      */
     public static void writeToFile(File file, Trajectory trajectory) 
     {
+    	Util.consoleLog("Trajectory saved to file %s", file.getName());
+    	
         PathfinderJNI.trajectorySerialize(trajectory.segments, file.getAbsolutePath());
     }
 
@@ -98,6 +120,8 @@ public class Pathfinder
      */
     public static Trajectory readFromFile(File file) 
     {
+    	Util.consoleLog("Loading trajectory from file %s", file.getName());
+    	
         return new Trajectory(PathfinderJNI.trajectoryDeserialize(file.getAbsolutePath()));
     }
 
@@ -108,6 +132,8 @@ public class Pathfinder
      */
     public static void writeToCSV(File file, Trajectory trajectory) 
     {
+    	Util.consoleLog("Trajectory saved to file %s", file.getName());
+    	
         PathfinderJNI.trajectorySerializeCSV(trajectory.segments, file.getAbsolutePath());
     }
 
@@ -118,6 +144,8 @@ public class Pathfinder
      */
     public static Trajectory readFromCSV(File file) 
     {
+    	Util.consoleLog("Loading trajectory from file %s", file.getName());
+    	
         return new Trajectory(PathfinderJNI.trajectoryDeserializeCSV(file.getAbsolutePath()));
     }
 
