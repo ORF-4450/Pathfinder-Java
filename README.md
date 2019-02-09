@@ -5,6 +5,9 @@ Windows, Mac and RoboRIO native binaries are included with the jar. To compile f
 
 This is a customized version created by team 4450, Olympia Robotics Federation. Based on PF 1.8. Add tracing and a public method allowing the encoderfollower.calculate() method to be called with a specific path segment number.
 
+Download the jar and add this line to your build.gradle dependencies (customize for your download folder):
+compile files("C:\\Users\\<username>\\Downloads\\Pathfinder-java-1.8.jar")
+
 ## Using the Library
 Full examples are provided under `examples/`
 
