@@ -59,7 +59,7 @@ public class TankModifier
      */
     public Trajectory getLeftTrajectory() 
     {
-    	if (Pathfinder.isTracing()) left.dumpToLog();
+    	//if (Pathfinder.isTracing()) left.dumpToLog();
 
     	return left;
     }
@@ -69,7 +69,7 @@ public class TankModifier
      */
     public Trajectory getRightTrajectory() 
     {
-    	if (Pathfinder.isTracing()) right.dumpToLog();
+    	//if (Pathfinder.isTracing()) right.dumpToLog();
 
         return right;
     }

@@ -3,7 +3,7 @@ This is the Java Wrapper for the 'Pathfinder' motion profiling library.
 
 Windows, Mac and RoboRIO native binaries are included with the jar. To compile for your own platform, see the master README.
 
-This is a customzied version created by team 4450, Olympia Robotics Federation.
+This is a customized version created by team 4450, Olympia Robotics Federation.
 
 ## Using the Library
 Full examples are provided under `examples/`

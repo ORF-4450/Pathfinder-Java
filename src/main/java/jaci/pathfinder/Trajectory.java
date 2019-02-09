@@ -56,7 +56,7 @@ public class Trajectory
          * @param fit                   The fit method to use
          * @param samples               How many samples to use to refine the path (higher = smoother, lower = faster)
          * @param dt                    The time delta between points (in seconds)
-         * @param max_velocity          The maximum velocity the body is capable of travelling at (in meters per second)
+         * @param max_velocity          The maximum velocity the body is capable of traveling at (in meters per second)
          * @param max_acceleration      The maximum acceleration to use (in meters per second per second)
          * @param max_jerk              The maximum jerk (acceleration per second) to use
          */
@@ -171,8 +171,8 @@ public class Trajectory
     	for (int i = 0; i < length(); i++)
 		{
 			seg = get(i);
-			Util.consoleLog("seg=%d x=%.2f y=%.2f pos=%.2f hdg=%.2f acc=%.2f", i, seg.x, seg.y, seg.position, 
-					 Pathfinder.r2d(seg.heading), seg.acceleration);
+			Util.consoleLog("seg=%d  x=%.2f  y=%.2f  pos=%.2f  hdg=%.2f  v=%.2f  acc=%.2f", i, seg.x, seg.y, seg.position, 
+					 Pathfinder.r2d(seg.heading), seg.velocity, seg.acceleration);
 		}
     }
 }

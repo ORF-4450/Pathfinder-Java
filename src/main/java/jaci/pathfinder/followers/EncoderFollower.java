@@ -13,16 +13,15 @@ import jaci.pathfinder.Trajectory;
  */
 public class EncoderFollower 
 {
+    int 	encoder_offset, encoder_tick_count;
+    double 	wheel_circumference;
 
-    int encoder_offset, encoder_tick_count;
-    double wheel_circumference;
+    double 	kp, ki, kd, kv, ka;
 
-    double kp, ki, kd, kv, ka;
+    double 	last_error, heading;
 
-    double last_error, heading;
-
-    int segment;
-    Trajectory trajectory;
+    int 		segment;
+    Trajectory 	trajectory;
     
     String name;
     
@@ -40,6 +39,7 @@ public class EncoderFollower
     public void setTrajectory(Trajectory traj) 
     {
         this.trajectory = traj;
+        
         reset();
     }
 
@@ -86,38 +86,67 @@ public class EncoderFollower
      * This does not account for heading of the robot. To account for heading, add some extra terms in your control
      * loop for realignment based on gyroscope input and the desired heading given by this object.
      * @param encoder_tick The amount of ticks the encoder has currently measured.
+     * @param segmentIndex The segment index (starts @ 0) to use in the calculation.
      * @return             The desired output for your motor controller
      */
-    public double calculate(int encoder_tick) 
+    public double calculate(int encoder_tick, int segmentIndex) 
     {
         // Number of Revolutions * Wheel Circumference
         double distance_covered = ((double)(encoder_tick - encoder_offset) / encoder_tick_count)
                 * wheel_circumference;
         
-        if (segment < trajectory.length()) 
+        if (segmentIndex < trajectory.length()) 
         {
-            Trajectory.Segment seg = trajectory.get(segment);
+            Trajectory.Segment seg = trajectory.get(segmentIndex);
             
+            //if (Pathfinder.isTracing())
+            // 	Util.consoleLog("%s: dc=%.3f  tdc=%.3f  enc=%d  eo=%d", name, distance_covered, seg.position,
+            //			encoder_tick, encoder_offset);
+
             double error = seg.position - distance_covered;
             
             double calculated_value =
                     kp * error +                                    // Proportional
                     kd * ((error - last_error) / seg.dt) +          // Derivative
                     (kv * seg.velocity + ka * seg.acceleration);    // V and A Terms
+//            
+//            if (Pathfinder.isTracing())
+//            	Util.consoleLog("%s: seg=%d  dc=%.3f  tdc=%.3f  err=%.3f  kp=%.3f  cv=%.4f  vel=%.3f  kv*vel=%.3f  hdg=%.2f", name, 
+//            			segmentIndex, distance_covered, 
+//            			seg.position, error, kp, calculated_value, seg.velocity, kv * seg.velocity, 
+//            			Pathfinder.r2d(seg.heading));
             
             if (Pathfinder.isTracing())
-            	Util.consoleLog("%s: seg=%d dc=%.2f tdc=%.2f err=%.2f cv=%.2f hdg=%.2f", name, segment, distance_covered, 
-            			seg.position, error, calculated_value, Pathfinder.d2r(seg.heading));
+            	Util.consoleLog("%s: seg=%d  tdc:%.3f - dc:%.3f = err:%.3f * kp:%.3f + (kv*vel):%.3f = cv:%.4f  vel=%.3f  hdg=%.2f", 
+            			name, segmentIndex, seg.position, distance_covered, error, kp, kv * seg.velocity, calculated_value, 
+            			seg.velocity, Pathfinder.r2d(seg.heading));
 
             last_error = error;
             heading = seg.heading;
-            segment++;            
+            segment = segmentIndex;            
 
             return Util.clampValue(calculated_value, 1.0);
         } 
         else return 0;
     }
 
+    /**
+     * Calculate the desired output for the motors, based on the amount of ticks the encoder has gone through.
+     * This does not account for heading of the robot. To account for heading, add some extra terms in your control
+     * loop for realignment based on gyroscope input and the desired heading given by this object. Uses the next
+     * segment in the trajectory automatically.
+     * @param encoder_tick The amount of ticks the encoder has currently measured.
+     * @return             The desired output for your motor controller
+     */   
+    public double calculate(int encoder_tick) 
+    {
+        double result = calculate(encoder_tick, segment); 
+
+        segment++;            
+
+        return result;
+    }
+    
     /**
      * @return the desired heading of the current point in the trajectory
      */
