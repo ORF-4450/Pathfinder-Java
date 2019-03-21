@@ -8,7 +8,7 @@ This is a customized version created by team 4450, Olympia Robotics Federation. 
 Download the jar and add this line to your build.gradle dependencies (customize for your download folder):
 compile files("C:\\Users\\<username>\\Downloads\\Pathfinder-java-1.8.jar")
 
-Also note that the library pathfinderjava.so must be installed on the RoboRio disk in this folder:
+Also note that the library libpathfinderjava.so must be installed on the RoboRio disk in this folder:
 ftp://roborio-4450-frc.local/usr/local/frc/third-party/lib/
 
 ## Using the Library
